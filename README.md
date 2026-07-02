@@ -6,12 +6,12 @@
 
 Check LLM response cache policies for privacy, TTL, and key-scope gaps. It solves review drift by turning plain-text plans into deterministic CI-friendly findings.
 
-## Input Contract 38
+## Input Contract
 
 Accepts LLM cache policy. The reader supports plain text, JSON, JSONL, and CSV so the
 tool can fit into scripts, CI jobs, and review exports.
 
-## CLI Walkthrough 38
+## CLI Walkthrough
 
 ```bash
 python -m pip install -e ".[dev]"
@@ -20,7 +20,7 @@ llm-cache-policy-check examples/sample.txt --json --fail-on medium
 python -m llm_cache_policy_check --help
 ```
 
-## Rule Surface 38
+## Rule Surface
 
 | Rule | Severity | Meaning |
 |---|---:|---|
@@ -28,7 +28,7 @@ python -m llm_cache_policy_check --help
 | `pii-cache` | medium | PII may be cached |
 | `global-scope` | low | cache scope is global |
 
-## Validation Notes 38
+## Validation Notes
 
 ```bash
 ruff check .
