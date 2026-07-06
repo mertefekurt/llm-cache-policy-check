@@ -2,38 +2,32 @@
 
 ![LLM Cache Policy Check cover](assets/readme-cover.svg)
 
-Check LLM response cache policies for privacy, TTL, and key-scope gaps. This repo keeps the work close to the terminal: clear input, predictable output, and no service to babysit.
+## Review intent
 
-## LLM Cache Policy Check catches
+LLM Cache Policy Check is meant for quick pull-request checks around LLM operations. It favors explicit rules over a bulky dashboard.
 
-- `no-ttl` (high): cache TTL missing. Fix: set cache TTL.
-- `pii-cache` (medium): PII may be cached. Fix: disable or isolate sensitive caching.
-- `global-scope` (low): cache scope is global. Fix: use tenant or user scoped keys.
+| Detail | Value |
+| --- | --- |
+| Area | model evaluation |
+| Entry | `llm-cache-policy-check` |
+| Input | plain text |
+| Output | terminal findings, optional JSON |
 
-## A normal pass
+## Review path
+
+![Signal map](assets/readme-diagram.svg)
+
+| Signal | Level | What it flags | Fix direction |
+| --- | --- | --- | --- |
+| `no-ttl` | high | cache TTL missing | set cache TTL |
+| `pii-cache` | medium | PII may be cached | disable or isolate sensitive caching |
+| `global-scope` | low | cache scope is global | use tenant or user scoped keys |
+
+## Local check
 
 ```bash
 git clone https://github.com/mertefekurt/llm-cache-policy-check.git
 cd llm-cache-policy-check
-python -m venv .venv
-source .venv/bin/activate
 python -m pip install -e ".[dev]"
 llm-cache-policy-check examples/sample.txt
-llm-cache-policy-check examples/sample.txt --json
-```
-
-The input can be text, JSON, JSONL, or CSV. Use `--json` when another script needs the result instead of a Markdown report.
-
-## A deliberately bad line
-
-```text
-cache enabled ttl none pii true scope global
-```
-
-## Maintainer loop
-
-```bash
-ruff check .
-pytest
-python -m llm_cache_policy_check --help
 ```
