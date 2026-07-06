@@ -1,50 +1,39 @@
-<p align="center">
-  <img src="assets/readme-cover.svg" alt="LLM Cache Policy Check cover" width="100%" />
-</p>
-
 # LLM Cache Policy Check
 
-![stack](https://img.shields.io/badge/stack-Python-2563eb?style=flat-square) ![python](https://img.shields.io/badge/python-3.11-16a34a?style=flat-square) ![license](https://img.shields.io/badge/license-MIT-dc2626?style=flat-square) ![ci](https://img.shields.io/badge/ci-GitHub%20Actions-7c3aed?style=flat-square)
+![LLM Cache Policy Check cover](assets/readme-cover.svg)
 
-Check LLM response cache policies for privacy, TTL, and key-scope gaps.
+Check LLM response cache policies for privacy, TTL, and key-scope gaps. This repo keeps the work close to the terminal: clear input, predictable output, and no service to babysit.
 
-## Why it exists
+## LLM Cache Policy Check catches
 
-Small review tasks are easy to skip when the signal lives in notes, spreadsheets, or loosely formatted exports. `llm-cache-policy-check` turns those checks into a repeatable command with plain findings and CI-friendly exit codes.
+- `no-ttl` (high): cache TTL missing. Fix: set cache TTL.
+- `pii-cache` (medium): PII may be cached. Fix: disable or isolate sensitive caching.
+- `global-scope` (low): cache scope is global. Fix: use tenant or user scoped keys.
 
-## Quick run
+## A normal pass
 
 ```bash
+git clone https://github.com/mertefekurt/llm-cache-policy-check.git
+cd llm-cache-policy-check
+python -m venv .venv
+source .venv/bin/activate
 python -m pip install -e ".[dev]"
 llm-cache-policy-check examples/sample.txt
-llm-cache-policy-check examples/sample.txt --json --fail-on medium
+llm-cache-policy-check examples/sample.txt --json
 ```
 
-## Rule set
+The input can be text, JSON, JSONL, or CSV. Use `--json` when another script needs the result instead of a Markdown report.
 
-| Rule | Severity | What it catches |
-| --- | --- | --- |
-| `no-ttl` | high | cache TTL missing |
-| `pii-cache` | medium | PII may be cached |
-| `global-scope` | low | cache scope is global |
-
-## Input
-
-The reader accepts plain text, JSON, JSONL, and CSV. That keeps it useful for hand-written notes, review exports, and small automation jobs.
-
-## Sample risky input
+## A deliberately bad line
 
 ```text
 cache enabled ttl none pii true scope global
 ```
 
-## Development
+## Maintainer loop
 
 ```bash
-python -m pip install -e ".[dev]"
 ruff check .
 pytest
 python -m llm_cache_policy_check --help
 ```
-
-`cli.py` handles arguments, `core.py` reads and evaluates records, and `rules.py` keeps the LLM Cache Policy Check policy easy to review.
